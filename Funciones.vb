@@ -32,6 +32,25 @@ Public Class Funciones
 
         Return resultado
     End Function
+    Public Shared Function UpdateNotificacionT(ByVal MovPosicion As Guid)
+        Dim resultado As Integer
+        resultado = 0
+        Dim conexion As SqlConnection
+        Dim sqlcomando As SqlCommand
+        Dim consulta As String
+        conexion = New SqlConnection(CadenaConexionSage)
+        conexion.Open()
+        consulta = "UPDATE AURORA.DBO.MRH_Notificaciones SET FechaConfirmadaEnvioT = GETDATE() WHERE MovPosicion = '" + MovPosicion.ToString + "'"
+        sqlcomando = New SqlCommand()
+        sqlcomando.CommandText = consulta
+        sqlcomando.CommandType = CommandType.Text
+        sqlcomando.Connection = conexion
+        sqlcomando.ExecuteNonQuery()
+        conexion.Close()
+        conexion.Dispose()
+
+        Return resultado
+    End Function
 
     Public Shared Function UpdateNotificacionError(ByVal MovPosicion As Guid)
         Dim resultado As Integer

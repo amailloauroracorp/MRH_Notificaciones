@@ -421,7 +421,7 @@ Public Class MRH_Notificaciones
                         MRH_Interno,
                         FirmaEmisor,MRH_OrigenNotificacion,
                         TelegramID
-                        FROM Aurora.dbo.MRH_Notificaciones WHERE FechaConfirmadaEnvio IS NULL AND EnviaEmail = -1 AND ErrorEnvio = 0"
+                        FROM Aurora.dbo.MRH_Notificaciones WHERE FechaConfirmadaEnvioT IS NULL AND EnviaApp = -1 AND ErrorEnvio = 0"
             sqlcomando = New SqlCommand()
             sqlcomando.CommandText = consulta
             sqlcomando.CommandType = CommandType.Text
@@ -468,158 +468,14 @@ Public Class MRH_Notificaciones
                 TelegramID = respuesta.Item("TelegramID")
                 MRH_OrigenNotificacion = respuesta.Item("MRH_OrigenNotificacion")
                 Try
-                    If MRH_interno = -1 Then
-                        cabeceraMensaje = "<html><body><table width='90%' cellpadding='2' cellspacing='2' border='0'><tr><td><img src=""cid:Pic1""></td><td><h1>SISTEMA DE NOTIFICACIONES</h1></td></tr></table>"
-                        cuerpoMensaje = Mensaje
-                        pieMensaje = "</body></html>"
-                        htmlBody = cabeceraMensaje + "<br><br>" + cuerpoMensaje + pieMensaje
-                        avHtml = AlternateView.CreateAlternateViewFromString(htmlBody, Nothing, System.Net.Mime.MediaTypeNames.Text.Html)
-                        pic1 = New LinkedResource("C:\MRH\Servicios\LogoBoton.png", System.Net.Mime.MediaTypeNames.Image.Jpeg)
-                        pic1.ContentId = "Pic1"
-                        avHtml.LinkedResources.Add(pic1)
-                        textBody = "You must use an e-mail client that supports HTML messages"
-                        m = New MailMessage
-                        m.AlternateViews.Add(avHtml)
-                        m.From = New MailAddress("aurorabot@auroracorp.es")
-                        m.To.Add(Email)
-                        m.Subject = Asunto
-                        If Adjunto <> "" Then
-                            Dim archi As New Attachment(Adjunto)
-                            m.Attachments.Add(archi)
-                        End If
-                        If Adjunto1 <> "" Then
-                            Dim archi1 As New Attachment(Adjunto1)
-                            m.Attachments.Add(archi1)
-                        End If
-                        If Adjunto2 <> "" Then
-                            Dim archi2 As New Attachment(Adjunto2)
-                            m.Attachments.Add(archi2)
-                        End If
-                        If Adjunto3 <> "" Then
-                            Dim archi3 As New Attachment(Adjunto3)
-                            m.Attachments.Add(archi3)
-                        End If
-                        If Adjunto4 <> "" Then
-                            Dim archi4 As New Attachment(Adjunto4)
-                            m.Attachments.Add(archi4)
-                        End If
-                        If Adjunto5 <> "" Then
-                            Dim archi5 As New Attachment(Adjunto5)
-                            m.Attachments.Add(archi5)
-                        End If
-                        If Adjunto6 <> "" Then
-                            Dim archi6 As New Attachment(Adjunto6)
-                            m.Attachments.Add(archi6)
-                        End If
-                        If Adjunto7 <> "" Then
-                            Dim archi7 As New Attachment(Adjunto7)
-                            m.Attachments.Add(archi7)
-                        End If
-                        If Adjunto8 <> "" Then
-                            Dim archi8 As New Attachment(Adjunto8)
-                            m.Attachments.Add(archi8)
-                        End If
-                        If Adjunto9 <> "" Then
-                            Dim archi9 As New Attachment(Adjunto9)
-                            m.Attachments.Add(archi9)
-                        End If
-                        If Adjunto10 <> "" Then
-                            Dim archi10 As New Attachment(Adjunto10)
-                            m.Attachments.Add(archi10)
-                        End If
-                        If Adjunto11 <> "" Then
-                            Dim archi11 As New Attachment(Adjunto11)
-                            m.Attachments.Add(archi11)
-                        End If
-                        If Adjunto12 <> "" Then
-                            Dim archi12 As New Attachment(Adjunto12)
-                            m.Attachments.Add(archi12)
-                        End If
-                        If Adjunto13 <> "" Then
-                            Dim archi13 As New Attachment(Adjunto13)
-                            m.Attachments.Add(archi13)
-                        End If
-                        If Adjunto14 <> "" Then
-                            Dim archi14 As New Attachment(Adjunto14)
-                            m.Attachments.Add(archi14)
-                        End If
-                        If Adjunto15 <> "" Then
-                            Dim archi15 As New Attachment(Adjunto15)
-                            m.Attachments.Add(archi15)
-                        End If
-                        If Adjunto16 <> "" Then
-                            Dim archi16 As New Attachment(Adjunto16)
-                            m.Attachments.Add(archi16)
-                        End If
-                        If Adjunto17 <> "" Then
-                            Dim archi17 As New Attachment(Adjunto17)
-                            m.Attachments.Add(archi17)
-                        End If
-                        If Adjunto18 <> "" Then
-                            Dim archi18 As New Attachment(Adjunto18)
-                            m.Attachments.Add(archi18)
-                        End If
-                        If Adjunto19 <> "" Then
-                            Dim archi19 As New Attachment(Adjunto19)
-                            m.Attachments.Add(archi19)
-                        End If
-                        If Adjunto20 <> "" Then
-                            Dim archi20 As New Attachment(Adjunto20)
-                            m.Attachments.Add(archi20)
-                        End If
-                        If Adjunto21 <> "" Then
-                            Dim archi21 As New Attachment(Adjunto21)
-                            m.Attachments.Add(archi21)
-                        End If
-                        If Adjunto22 <> "" Then
-                            Dim archi22 As New Attachment(Adjunto22)
-                            m.Attachments.Add(archi22)
-                        End If
-                        If Adjunto23 <> "" Then
-                            Dim archi23 As New Attachment(Adjunto23)
-                            m.Attachments.Add(archi23)
-                        End If
-                        If Adjunto24 <> "" Then
-                            Dim archi24 As New Attachment(Adjunto24)
-                            m.Attachments.Add(archi24)
-                        End If
-                        If Adjunto25 <> "" Then
-                            Dim archi25 As New Attachment(Adjunto25)
-                            m.Attachments.Add(archi25)
-                        End If
-                        client = New SmtpClient("aurorabot.auroracorp.es")
-                        client.Credentials = New Net.NetworkCredential("news_auroraco44", "Aur0r4Crg2022")
-                        client.Send(m)
-                        Funciones.UpdateNotificacion(MovPosicion)
-                    End If
-                    If MRH_interno = 0 Then
-                        cabeceraMensaje = "<html><body>"
-                        cuerpoMensaje = Mensaje
-                        pieMensaje = FirmaEmisor + "</body></html>"
-                        htmlBody = cabeceraMensaje + "<br><br>" + cuerpoMensaje + "<br><br>" + pieMensaje
-                        avHtml = AlternateView.CreateAlternateViewFromString(htmlBody, Nothing, System.Net.Mime.MediaTypeNames.Text.Html)
 
-                        textBody = "You must use an e-mail client that supports HTML messages"
-                        m = New MailMessage
-                        m.AlternateViews.Add(avHtml)
-                        m.From = New MailAddress(EmailEmisor)
-                        m.To.Add(Email)
-                        m.Subject = Asunto
+                    'Despues de enviar la notificación por correo, enviamos el mensaje por telegram. 
 
-                        client = New SmtpClient(SmtpEmisor)
-                        If MRH_OrigenNotificacion = "SOPORTE_IT" Then
-                            client.Credentials = New Net.NetworkCredential("news_aurorain63", PassEmisor)
-                        Else
-                            client.Credentials = New Net.NetworkCredential(EmailEmisor, PassEmisor)
-                        End If
-                        client.Send(m)
-                        'Despues de enviar la notificación por correo, enviamos el mensaje por telegram. 
-
-                        Await Bot_client.SendTextMessageAsync(TelegramID, Mensaje)
+                    Await Bot_client.SendTextMessageAsync(TelegramID, Mensaje)
 
 
-                        Funciones.UpdateNotificacion(MovPosicion)
-                    End If
+                    Funciones.UpdateNotificacionT(MovPosicion)
+
                 Catch
                     Funciones.UpdateNotificacionError(MovPosicion)
 
