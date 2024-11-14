@@ -1,6 +1,9 @@
 ﻿Imports System.Data.SqlClient
 Imports System.Net.Mail
 Imports Telegram.Bot
+Imports System.IO
+Imports System.Net
+Imports System.Text
 
 Public Class MRH_Notificaciones
     Shared Bot_client As TelegramBotClient = New TelegramBotClient("5770884977:AAGDI5TJ5vn_e_DYtumrfqrrY6iFX9dClWg")
@@ -80,6 +83,7 @@ Public Class MRH_Notificaciones
         Dim m As MailMessage
         Dim client As SmtpClient
 
+        ' TimerLoop.Stop()
         'Funciones.EnviaNotificaciones()
         Try
             conexion = New SqlConnection(Funciones.CadenaConexionSage)
@@ -117,7 +121,8 @@ Public Class MRH_Notificaciones
                         MRH_Interno,
                         FirmaEmisor,MRH_OrigenNotificacion,
                         TelegramID
-                        FROM Aurora.dbo.MRH_Notificaciones WHERE FechaConfirmadaEnvio IS NULL AND EnviaEmail = -1 AND ErrorEnvio = 0"
+                        FROM Aurora.dbo.MRH_Notificaciones WHERE FechaConfirmadaEnvio IS NULL AND EnviaEmail = -1 AND ErrorEnvio = 0
+                        ORDER BY FechaRegistro ASC"
             sqlcomando = New SqlCommand()
             sqlcomando.CommandText = consulta
             sqlcomando.CommandType = CommandType.Text
@@ -304,13 +309,33 @@ Public Class MRH_Notificaciones
 
                         client = New SmtpClient(SmtpEmisor)
                         If MRH_OrigenNotificacion = "SOPORTE_IT" Then
-                            client.Credentials = New Net.NetworkCredential("news_aurorain63", PassEmisor)
+                            client.Credentials = New Net.NetworkCredential("news_auroraco44", "Aur0r4Crg2022")
+                            'client.Credentials = New Net.NetworkCredential("news_aurorain24", PassEmisor)
+
                         Else
                             client.Credentials = New Net.NetworkCredential(EmailEmisor, PassEmisor)
                         End If
                         client.Send(m)
 
                         Funciones.UpdateNotificacion(MovPosicion)
+                    End If
+                    'Notificaciones tickets
+                    If Email = "amaillo@auroracorp.es" And Asunto.Contains("Nuevo ticket creado") Then
+                        Console.WriteLine("Envia teams")
+                        Dim webhookUrl As String = "https://auroracorpes.webhook.office.com/webhookb2/d6fb9ee0-2888-486b-9d18-0e0d99f32080@31cd7d08-296b-4f6f-a2ad-824f6ed6ec8b/IncomingWebhook/bf6e08ee74cb4031ba0994be2dd6f081/68351bcc-3b82-49d1-b16c-ed189de5ed3b/V2w99EYsWOoolSjM4jDeHREHOSKP44zq5UAFJR1V1AcDE1"
+                        Dim message As String = "{
+            ""@type"": ""MessageCard"",
+            ""@context"": ""http://schema.org/extensions"",
+            ""summary"": ""Soporte IT"",
+            ""themeColor"": ""0076D7"",
+            ""title"": """ + Asunto + """,
+            ""text"": """ + Mensaje.Replace("""", "").Replace("<img src=https://www.intranet.auroracorp.digital/images/Logotipo-AuroraIntranet-0067BE.jpg role=presentation width=390px class=sc-cHGsZl bHiaRe style=max-width: 390px;></a></p>", "ABRIR TICKET") + """
+        }"
+                        Using client1 As New WebClient()
+                            client1.Headers(HttpRequestHeader.ContentType) = "application/json"
+                            Dim response As Byte() = client1.UploadData(webhookUrl, "POST", Encoding.UTF8.GetBytes(message))
+                            Dim responseText As String = Encoding.UTF8.GetString(response)
+                        End Using
                     End If
                 Catch
                     Funciones.UpdateNotificacionError(MovPosicion)
@@ -325,6 +350,7 @@ Public Class MRH_Notificaciones
         Catch ex As Exception
             '    
         End Try
+        ' TimerLoop.Start()
     End Sub
 
 
@@ -421,7 +447,8 @@ Public Class MRH_Notificaciones
                         MRH_Interno,
                         FirmaEmisor,MRH_OrigenNotificacion,
                         TelegramID
-                        FROM Aurora.dbo.MRH_Notificaciones WHERE FechaConfirmadaEnvioT IS NULL AND EnviaApp = -1 AND ErrorEnvio = 0"
+                        FROM Aurora.dbo.MRH_Notificaciones WHERE FechaConfirmadaEnvioT IS NULL AND EnviaApp = -1 AND ErrorEnvio = 0
+                        ORDER BY FechaRegistro ASC"
             sqlcomando = New SqlCommand()
             sqlcomando.CommandText = consulta
             sqlcomando.CommandType = CommandType.Text
@@ -467,12 +494,97 @@ Public Class MRH_Notificaciones
                 FirmaEmisor = respuesta.Item("FirmaEmisor")
                 TelegramID = respuesta.Item("TelegramID")
                 MRH_OrigenNotificacion = respuesta.Item("MRH_OrigenNotificacion")
+
+
+
+
+
                 Try
 
-                    'Despues de enviar la notificación por correo, enviamos el mensaje por telegram. 
-
+                    'Despues de enviar los adjuntos por telegram, enviamos el mensaje de texto.
+                    Await Bot_client.SendTextMessageAsync(TelegramID, Asunto)
                     Await Bot_client.SendTextMessageAsync(TelegramID, Mensaje)
+                    'Envio de los Adjuntos por Telegram.
 
+
+                    If Adjunto <> "" Then
+                        Funciones.EnviaAdjuntoTelegram(TelegramID, Adjunto)
+                    End If
+                    If Adjunto1 <> "" Then
+                        Funciones.EnviaAdjuntoTelegram(TelegramID, Adjunto1)
+                    End If
+                    If Adjunto2 <> "" Then
+                        Funciones.EnviaAdjuntoTelegram(TelegramID, Adjunto2)
+                    End If
+                    If Adjunto3 <> "" Then
+                        Funciones.EnviaAdjuntoTelegram(TelegramID, Adjunto3)
+                    End If
+                    If Adjunto4 <> "" Then
+                        Funciones.EnviaAdjuntoTelegram(TelegramID, Adjunto4)
+                    End If
+                    If Adjunto5 <> "" Then
+                        Funciones.EnviaAdjuntoTelegram(TelegramID, Adjunto5)
+                    End If
+                    If Adjunto6 <> "" Then
+                        Funciones.EnviaAdjuntoTelegram(TelegramID, Adjunto6)
+                    End If
+                    If Adjunto7 <> "" Then
+                        Funciones.EnviaAdjuntoTelegram(TelegramID, Adjunto7)
+                    End If
+                    If Adjunto8 <> "" Then
+                        Funciones.EnviaAdjuntoTelegram(TelegramID, Adjunto8)
+                    End If
+                    If Adjunto9 <> "" Then
+                        Funciones.EnviaAdjuntoTelegram(TelegramID, Adjunto9)
+                    End If
+                    If Adjunto10 <> "" Then
+                        Funciones.EnviaAdjuntoTelegram(TelegramID, Adjunto10)
+                    End If
+                    If Adjunto11 <> "" Then
+                        Funciones.EnviaAdjuntoTelegram(TelegramID, Adjunto11)
+                    End If
+                    If Adjunto12 <> "" Then
+                        Funciones.EnviaAdjuntoTelegram(TelegramID, Adjunto12)
+                    End If
+                    If Adjunto13 <> "" Then
+                        Funciones.EnviaAdjuntoTelegram(TelegramID, Adjunto13)
+                    End If
+                    If Adjunto14 <> "" Then
+                        Funciones.EnviaAdjuntoTelegram(TelegramID, Adjunto14)
+                    End If
+                    If Adjunto15 <> "" Then
+                        Funciones.EnviaAdjuntoTelegram(TelegramID, Adjunto15)
+                    End If
+                    If Adjunto16 <> "" Then
+                        Funciones.EnviaAdjuntoTelegram(TelegramID, Adjunto16)
+                    End If
+                    If Adjunto17 <> "" Then
+                        Funciones.EnviaAdjuntoTelegram(TelegramID, Adjunto17)
+                    End If
+                    If Adjunto18 <> "" Then
+                        Funciones.EnviaAdjuntoTelegram(TelegramID, Adjunto18)
+                    End If
+                    If Adjunto19 <> "" Then
+                        Funciones.EnviaAdjuntoTelegram(TelegramID, Adjunto19)
+                    End If
+                    If Adjunto20 <> "" Then
+                        Funciones.EnviaAdjuntoTelegram(TelegramID, Adjunto20)
+                    End If
+                    If Adjunto21 <> "" Then
+                        Funciones.EnviaAdjuntoTelegram(TelegramID, Adjunto21)
+                    End If
+                    If Adjunto22 <> "" Then
+                        Funciones.EnviaAdjuntoTelegram(TelegramID, Adjunto22)
+                    End If
+                    If Adjunto23 <> "" Then
+                        Funciones.EnviaAdjuntoTelegram(TelegramID, Adjunto23)
+                    End If
+                    If Adjunto24 <> "" Then
+                        Funciones.EnviaAdjuntoTelegram(TelegramID, Adjunto24)
+                    End If
+                    If Adjunto25 <> "" Then
+                        Funciones.EnviaAdjuntoTelegram(TelegramID, Adjunto25)
+                    End If
 
                     Funciones.UpdateNotificacionT(MovPosicion)
 

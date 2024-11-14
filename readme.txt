@@ -41,6 +41,18 @@ MRH_TelegramTelefono
 Queda funcionando y probado 20/09/2023
 
 
+//Instrucción de envío de archivos (Hasta 10 MB)
+
+	
+	Dim RutaArchivo As String 
+	RutaArchivo="Pon aqui la ruta donde se encuentra el archivo que quieres mandar"
+
+	
+	'Lo mete en un FileStream ya que el await no se traga como parametro un string del tirón y después lo manda
+     Dim InputFileStream As New InputFileStream(New FileStream(RutaArchivo, FileMode.Open), Path.GetFileName(RutaArchivo))
+     Await Bot_client.SendDocumentAsync(TelegramID, InputFileStream)
+
+ End If
 
 
 

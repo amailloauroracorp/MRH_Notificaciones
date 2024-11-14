@@ -1,8 +1,12 @@
 ﻿Imports System.Data.SqlClient
 Imports System.Net.Mail
+Imports Telegram.Bot
+Imports System.IO
+Imports Telegram.Bot.Types
 
 Public Class Funciones
-    Public Shared CadenaConexionSage As String = "Data Source=SAGE200\SAGE;User ID=logic;Password=Sage2009+;"
+    Shared Bot_client As TelegramBotClient = New TelegramBotClient("5770884977:AAGDI5TJ5vn_e_DYtumrfqrrY6iFX9dClWg")
+    Public Shared CadenaConexionSage As String = "Data Source=SAGE200\SAGE;User ID=MRH;Password=Aurora_2019_1+#;"
     Public Shared Function EnviaNotificaciones()
         Dim resultado As Integer = 0
 
@@ -71,4 +75,26 @@ Public Class Funciones
 
         Return resultado
     End Function
+
+    Public Shared Async Function EnviaAdjuntoTelegram(TelegramID As String, RutaArchivo As String) As Task
+
+
+        'Si el archivo definido en los campos de AdjuntoX de MRH.Notificaciones Existe, lo cargo en el FileStream y luego lo mando 
+        If System.IO.File.Exists(RutaArchivo) Then
+
+            Dim InputFileStream As New InputFileStream(New FileStream(RutaArchivo, FileMode.Open), Path.GetFileName(RutaArchivo))
+            Await Bot_client.SendDocumentAsync(TelegramID, InputFileStream)
+
+        End If
+
+
+
+    End Function
+
+
+
 End Class
+
+
+
+
